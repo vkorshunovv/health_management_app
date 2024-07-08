@@ -11,7 +11,7 @@ import { userFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.actions";
 
-export const PatientForm = () => {
+export const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,26 +61,11 @@ export const PatientForm = () => {
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
         />
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
-          name="email"
-          label="Email adress"
-          placeholder="manuelavill@gmail.com"
-          iconSrc="/assets/icons/email.svg"
-          iconAlt="email"
-        />
-        <CustomFormField
-          fieldType={FormFieldType.PHONE_INPUT}
-          control={form.control}
-          name="phone"
-          label="Phone number"
-          placeholder="(555) 123-4567"
-        />
+
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   );
 };
 
-export default PatientForm;
+export default RegisterForm;
