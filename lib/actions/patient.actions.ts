@@ -7,6 +7,7 @@ import {
   ENDPOINT,
   PATIENT_COLLECTION_ID,
   PROJECT_ID,
+  API_KEY,
   users,
   databases,
   storage,
@@ -50,10 +51,12 @@ export const registerPatient = async ({
     let file;
 
     if (identificationDocument) {
-      const inputFile = InputFile.fromBuffer(
-        identificationDocument?.get("blobFile") as Blob,
-        identificationDocument?.get("fileName") as string
-      );
+      const inputFile =
+        identificationDocument &&
+        InputFile.fromBuffer(
+          identificationDocument?.get("blobFile") as Blob,
+          identificationDocument?.get("fileName") as string
+        );
 
       file = await storage.createFile(BUCKET_ID!, ID.unique(), inputFile);
     }
@@ -63,14 +66,59 @@ export const registerPatient = async ({
       PATIENT_COLLECTION_ID!,
       ID.unique(),
       {
-        identificationDocumentId: file?.$id || null,
-        identificationDocumentUrl: `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file?.$id}/view?project=${PROJECT_ID}`,
+        identificationDocumentId: file?.$id ? file.$id : null,
+        identificationDocumentUrl: file?.$id
+          ? `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view??project=${PROJECT_ID}`
+          : null,
         ...patient,
       }
     );
 
     return parseStringify(newPatient);
   } catch (error) {
-    console.log("An error occurred while register patient:", error);
+    console.log("An error occurred while creating a new patient:", error);
   }
 };
+
+// export const registerPatient = async ({
+//   identificationDocument,
+//   ...patient
+// }: RegisterUserParams) => {
+
+//   try {
+//     // Upload file ->  // https://appwrite.io/docs/references/cloud/client-web/storage#createFile
+//     let file;
+
+//     if (identificationDocument) {
+//       const inputFile =
+//         identificationDocument &&
+//         InputFile.fromBuffer(
+//           identificationDocument?.get("blobFile") as Blob,
+//           identificationDocument?.get("fileName") as string
+//         );
+
+//         console.log('Uploading file:', inputFile);
+//         file = await storage.createFile(BUCKET_ID!, ID.unique(), inputFile);
+//         console.log('Uploaded file:', file);
+//     }
+
+//     // Create new patient document -> https://appwrite.io/docs/references/cloud/server-nodejs/databases#createDocument
+//     const newPatient = await databases.createDocument(
+//       DATABASE_ID!,
+//       PATIENT_COLLECTION_ID!,
+//       ID.unique(),
+//       {
+//         identificationDocumentId: file?.$id ? file.$id : null,
+//         identificationDocumentUrl: file?.$id
+//           ? `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view??project=${PROJECT_ID}`
+//           : null,
+//         ...patient,
+//       }
+//     );
+
+//     console.log('New patient document created:', newPatient);
+//     return parseStringify(newPatient);
+//   } catch (error) {
+//     console.error("An error occurred while creating a new patient:", error);
+//   }
+// };

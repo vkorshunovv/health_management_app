@@ -9,7 +9,7 @@ import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { PatientFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
-import { createUser } from "@/lib/actions/patient.actions";
+import { registerPatient } from "@/lib/actions/patient.actions";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   GenderOptions,
@@ -20,9 +20,9 @@ import {
 import { Label } from "../ui/label";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
-import FileUploader from "../FileUploader";
+import { FileUploader } from "../FileUploader";
 
-export const RegisterForm = ({ user }: { user: User }) => {
+const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,9 +30,9 @@ export const RegisterForm = ({ user }: { user: User }) => {
     resolver: zodResolver(PatientFormValidation),
     defaultValues: {
       ...PatientFormDefaultValues,
-      name: "",
-      email: "",
-      phone: "",
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
     },
   });
 
@@ -62,9 +62,12 @@ export const RegisterForm = ({ user }: { user: User }) => {
         identificationDocument: formData,
       };
 
-      const patient = await registerPatient(patientData);
+      //@ts-ignore
+      const newPatient = await registerPatient(patientData);
 
-      if (patient) router.push(`/patients/${user.$id}/new-appointment`);
+      if (newPatient) {
+        return router.push(`/patients/${user.$id}/new-appointment`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -103,7 +106,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
             fieldType={FormFieldType.INPUT}
             control={form.control}
             name="email"
-            label="Email adress"
+            label="Email address"
             placeholder="manuelavill@gmail.com"
             iconSrc="/assets/icons/email.svg"
             iconAlt="email"
@@ -156,8 +159,8 @@ export const RegisterForm = ({ user }: { user: User }) => {
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="adress"
-            label="Adress"
+            name="address"
+            label="Address"
             placeholder="Calle de Colón, Madrid"
           />
           <CustomFormField
@@ -253,7 +256,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
           <CustomFormField
             fieldType={FormFieldType.TEXTAREA}
             control={form.control}
-            name="familuMedicalHistory"
+            name="familyMedicalHistory"
             label="Family medical history"
             placeholder="Mother had brain cancer, Father had heart disease"
           />
