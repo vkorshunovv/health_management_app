@@ -1,4 +1,4 @@
-'use server'
+"use server";
 
 import {
   APPOINTMENT_COLLECTION_ID,
@@ -20,6 +20,19 @@ export const createAppointment = async (
     );
 
     return parseStringify(newAppointment);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAppointment = async (appointmentId: string) => {
+  try {
+    const appointment = await databases.getDocument(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      appointmentId
+    );
+    return parseStringify(appointment);
   } catch (error) {
     console.log(error);
   }
