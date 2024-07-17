@@ -40,9 +40,9 @@ export const AppointmentForm = ({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
       primaryPhysician: appointment ? appointment.primaryPhysician : "",
-      schedule: appointment ? new Date(appointment.schedule) : new Date(),
-      note: appointment ? appointment.note : "",
-      cancellationReason: appointment ? appointment.cancellationReason : "",
+      schedule: appointment ? new Date(appointment?.schedule) : new Date(Date.now()),
+      note: appointment?.note || "",
+      cancellationReason: appointment?.cancellationReason || "",
     },
   });
 

@@ -56,11 +56,13 @@ export const getRecentAppointmentList = async () => {
 
     const counts = (appointments.documents as Appointment[]).reduce(
       (acc, appointment) => {
-        if ((appointment.status === "scheduled")) {
+        if (appointment.status === "scheduled") {
           acc.scheduledCount++;
-        } else if ((appointment.status === "pending")) {
+        }
+        if (appointment.status === "pending") {
           acc.pendingCount++;
-        } else if ((appointment.status === "cancelled")) {
+        }
+        if (appointment.status === "cancelled") {
           acc.cancelledCount++;
         }
         return acc;
@@ -76,7 +78,10 @@ export const getRecentAppointmentList = async () => {
 
     return parseStringify(data);
   } catch (error) {
-    console.log(error);
+    console.log(
+      "An error occurred while retrieving the recent appointments:",
+      error
+    );
   }
 };
 
@@ -103,6 +108,6 @@ export const updateAppointment = async ({
     revalidatePath("/admin");
     return parseStringify(updatedAppointment);
   } catch (error) {
-    console.log(error);
+    console.log("An error occurred while scheduling an appointment:", error);
   }
 };

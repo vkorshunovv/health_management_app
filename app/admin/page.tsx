@@ -21,6 +21,7 @@ const Admin = async () => {
             className="h-8 w-fit"
           />
         </Link>
+
         <p className="text-16-semibold">Admin Dashboard</p>
       </header>
 
@@ -35,7 +36,7 @@ const Admin = async () => {
         <section className="admin-stat">
           <StatCard
             type="appointments"
-            count={appointments.scheduleCount}
+            count={appointments.scheduledCount}
             label="Scheduled Appointments"
             icon="/assets/icons/appointments.svg"
           />
