@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { getAppointmentSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { Doctors } from "@/constants";
@@ -29,7 +29,7 @@ export const AppointmentForm = ({
   patientId: string;
   type: "create" | "cancel" | "schedule";
   appointment?: Appointment;
-  setOpen: () => void;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +40,9 @@ export const AppointmentForm = ({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
       primaryPhysician: appointment ? appointment.primaryPhysician : "",
-      schedule: appointment ? new Date(appointment?.schedule) : new Date(Date.now()),
+      schedule: appointment
+        ? new Date(appointment?.schedule)
+        : new Date(Date.now()),
       note: appointment?.note || "",
       cancellationReason: appointment?.cancellationReason || "",
     },

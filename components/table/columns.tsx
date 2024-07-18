@@ -12,8 +12,6 @@ import Image from "next/image";
 import AppointmentModal from "../AppointmentModal";
 import { Appointment } from "@/lib/actions/appwrite.types";
 
-
-
 export const columns: ColumnDef<Appointment>[] = [
   {
     header: "ID",
@@ -56,8 +54,8 @@ export const columns: ColumnDef<Appointment>[] = [
       return (
         <div className="flex items-center gap-3">
           <Image
-            src={doctor?.image}
-            alt={doctor.name}
+            src={doctor?.image!}
+            alt="doctor"
             width={100}
             height={100}
             className="size-8"
@@ -80,7 +78,7 @@ export const columns: ColumnDef<Appointment>[] = [
             title="Schedule Appointment"
             description="Please confirm the following details to scheduled"
           />
-         <AppointmentModal
+          <AppointmentModal
             type="cancel"
             patientId={data.patient.$id}
             userId={data.userId}
